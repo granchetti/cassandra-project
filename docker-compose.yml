@@ -1,0 +1,22 @@
+version: '3'
+services:
+  cassandra:
+    image: cassandra:4.1
+    container_name: cassandra_db
+    ports:
+      - "9042:9042"
+    networks:
+      - app-network
+
+  app:
+    build: .
+    container_name: node_app
+    depends_on:
+      - cassandra
+    networks:
+      - app-network
+    command: ["npx", "ts-node", "src/index.ts"]
+
+networks:
+  app-network:
+    driver: bridge
