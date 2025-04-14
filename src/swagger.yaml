@@ -3,6 +3,7 @@ info:
   title: API de Usuarios - CRUD con Cassandra
   version: "1.0.0"
   description: API para gestionar usuarios utilizando Cassandra y Node con TypeScript.
+
 servers:
   - url: http://localhost:3000
     description: Servidor local
@@ -19,6 +20,10 @@ paths:
             schema:
               type: object
               properties:
+                username:
+                  type: string
+                  description: Nombre de usuario único (no puede repetirse)
+                  example: "juanperez"
                 name:
                   type: string
                   example: "Juan Pérez"
@@ -26,6 +31,7 @@ paths:
                   type: integer
                   example: 30
               required:
+                - username
                 - name
                 - age
       responses:
@@ -39,6 +45,8 @@ paths:
                   userId:
                     type: string
                     example: "123e4567-e89b-12d3-a456-426614174000"
+        "400":
+          description: Error en la solicitud (usuario duplicado, datos inválidos, etc.)
 
     get:
       summary: Obtener todos los usuarios
@@ -54,12 +62,15 @@ paths:
                   properties:
                     user_id:
                       type: string
+                    username:
+                      type: string
                     name:
                       type: string
                     age:
                       type: integer
                   example:
                     user_id: "123e4567-e89b-12d3-a456-426614174000"
+                    username: "juanperez"
                     name: "Juan Pérez"
                     age: 30
 
@@ -71,6 +82,7 @@ paths:
         required: true
         schema:
           type: string
+
     get:
       summary: Obtener un usuario por ID
       responses:
@@ -83,18 +95,26 @@ paths:
                 properties:
                   user_id:
                     type: string
+                  username:
+                    type: string
                   name:
                     type: string
                   age:
                     type: integer
                 example:
                   user_id: "123e4567-e89b-12d3-a456-426614174000"
+                  username: "juanperez"
                   name: "Juan Pérez"
                   age: 30
+        "404":
+          description: Usuario no encontrado
+
     put:
       summary: Actualizar un usuario
       requestBody:
-        description: Datos actualizados del usuario.
+        description: |
+          Datos actualizados del usuario.
+          ⚠️ El campo `username` no es editable.
         required: true
         content:
           application/json:
@@ -107,11 +127,19 @@ paths:
                 age:
                   type: integer
                   example: 31
+              required:
+                - name
+                - age
       responses:
         "200":
           description: Usuario actualizado exitosamente
+        "404":
+          description: Usuario no encontrado
+
     delete:
       summary: Eliminar un usuario
       responses:
         "200":
           description: Usuario eliminado correctamente
+        "404":
+          description: Usuario no encontrado
