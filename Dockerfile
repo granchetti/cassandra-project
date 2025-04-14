@@ -1,10 +1,24 @@
+FROM node:23-slim AS build
+
+WORKDIR /usr/src/app
+
+COPY package*.json tsconfig.json ./
+RUN npm install
+
+COPY ./src ./src
+COPY ./data ./data
+RUN npx tsc
+
+RUN cp src/swagger.yaml dist/swagger.yaml
+
 FROM node:23-slim
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-RUN npm install
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/package*.json ./
+COPY --from=build /usr/src/app/data ./data
+RUN npm install --only=production
 
-COPY . .
 
-CMD ["npx", "ts-node", "src/index.ts"]
+CMD ["node", "dist/server.js"]

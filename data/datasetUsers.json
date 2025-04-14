@@ -1,0 +1,52 @@
+[
+  {
+    "username": "juanperez",
+    "name": "Juan Perez",
+    "age": 28
+  },
+  {
+    "username": "mariagarcia",
+    "name": "María García",
+    "age": 34
+  },
+  {
+    "username": "carloslopez",
+    "name": "Carlos López",
+    "age": 22
+  },
+  {
+    "username": "anamtz",
+    "name": "Ana Martínez",
+    "age": 30
+  },
+  {
+    "username": "luisf",
+    "name": "Luis Fernández",
+    "age": 27
+  },
+  {
+    "username": "luciatorres",
+    "name": "Lucía Torres",
+    "age": 25
+  },
+  {
+    "username": "miguelangel",
+    "name": "Miguel Ángel",
+    "age": 33
+  },
+  {
+    "username": "sofiam",
+    "name": "Sofía Ramírez",
+    "age": 29
+  },
+  {
+    "username": "diegom",
+    "name": "Diego Morales",
+    "age": 31
+  },
+  {
+    "username": "elenan",
+    "name": "Elena Navarro",
+    "age": 26
+  }
+]

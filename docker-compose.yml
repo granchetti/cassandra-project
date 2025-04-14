@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   cassandra:
     image: cassandra:4.1
@@ -7,6 +7,11 @@ services:
       - "9042:9042"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'describe keyspaces'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   app:
     build: .
@@ -15,7 +20,22 @@ services:
       - cassandra
     networks:
       - app-network
-    command: ["npx", "ts-node", "src/index.ts"]
+    ports:
+      - "3000:3000"
+    command: ["node", "dist/server.js"]
+
+
+  seed:
+    build: .
+    container_name: seed_dataset
+    depends_on:
+      - cassandra
+      - app
+    networks:
+      - app-network
+    command: ["npm", "run", "seed"]
+    restart: "no"
+  
 
 networks:
   app-network:

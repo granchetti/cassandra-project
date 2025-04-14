@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: API de Usuarios - CRUD con Cassandra
+  version: "1.0.0"
+  description: API para gestionar usuarios utilizando Cassandra y Node con TypeScript.
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+
+paths:
+  /users:
+    post:
+      summary: Crear un usuario
+      requestBody:
+        description: Datos del usuario a crear.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Juan Pérez"
+                age:
+                  type: integer
+                  example: 30
+              required:
+                - name
+                - age
+      responses:
+        "200":
+          description: Usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: "123e4567-e89b-12d3-a456-426614174000"
+
+    get:
+      summary: Obtener todos los usuarios
+      responses:
+        "200":
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: string
+                    name:
+                      type: string
+                    age:
+                      type: integer
+                  example:
+                    user_id: "123e4567-e89b-12d3-a456-426614174000"
+                    name: "Juan Pérez"
+                    age: 30
+
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        description: ID del usuario
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Obtener un usuario por ID
+      responses:
+        "200":
+          description: Detalles del usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                  name:
+                    type: string
+                  age:
+                    type: integer
+                example:
+                  user_id: "123e4567-e89b-12d3-a456-426614174000"
+                  name: "Juan Pérez"
+                  age: 30
+    put:
+      summary: Actualizar un usuario
+      requestBody:
+        description: Datos actualizados del usuario.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Juan Actualizado"
+                age:
+                  type: integer
+                  example: 31
+      responses:
+        "200":
+          description: Usuario actualizado exitosamente
+    delete:
+      summary: Eliminar un usuario
+      responses:
+        "200":
+          description: Usuario eliminado correctamente
