@@ -7,7 +7,7 @@ export async function createUser(
   age: number
 ): Promise<string> {
   const check = await client.execute(
-    "SELECT * FROM users WHERE username = ?",
+    "SELECT * FROM users WHERE username = ? ALLOW FILTERING",
     [username],
     { prepare: true }
   );

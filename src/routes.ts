@@ -7,10 +7,16 @@ import {
   getAllUsers,
 } from "./index";
 
-const router = Router();
+const router: Router = Router();
 
-router.post("/users", async (req: Request, res: Response) => {
+router.post("/users", async (req: Request, res: Response): Promise<void> => {
   const { username, name, age } = req.body;
+
+  if (!username || !name || age === undefined) {
+    res.status(400).json({ error: "username, name y age son requeridos" });
+    return;
+  }
+
   try {
     const userId = await createUser(username, name, age);
     res.status(201).json({ userId });
@@ -19,7 +25,7 @@ router.post("/users", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/users/:userId", async (req: Request, res: Response) => {
+router.get("/users/:userId", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;
     const user = await getUser(userId);
@@ -33,7 +39,7 @@ router.get("/users/:userId", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/users", async (req: Request, res: Response) => {
+router.get("/users", async (_req: Request, res: Response): Promise<void> => {
   try {
     const users = await getAllUsers();
     res.status(200).json(users);
@@ -42,10 +48,15 @@ router.get("/users", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/users/:userId", async (req: Request, res: Response) => {
+router.put("/users/:userId", async (req: Request, res: Response): Promise<void> => {
+  const { name, age } = req.body;
+  if (!name || age === undefined) {
+    res.status(400).json({ error: "name y age son requeridos" });
+    return;
+  }
+
   try {
     const userId = req.params.userId;
-    const { name, age } = req.body;
     await updateUser(userId, name, age);
     res.status(200).json({ message: "Usuario actualizado" });
   } catch (error) {
@@ -53,8 +64,7 @@ router.put("/users/:userId", async (req: Request, res: Response) => {
   }
 });
 
-// Endpoint para eliminar un usuario
-router.delete("/users/:userId", async (req: Request, res: Response) => {
+router.delete("/users/:userId", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;
     await deleteUser(userId);
