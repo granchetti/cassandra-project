@@ -11,7 +11,8 @@
     "build:ts": "tsc",
     "start": "node dist/server.js",
     "seed": "node dist/loadDataset.js",
-    "test": "docker compose up -d cassandra && until docker compose exec cassandra cqlsh -e \"describe keyspaces\" 2>/dev/null; do echo '⌛ esperando Cassandra...'; sleep 5; done && CONTACT_POINT=localhost jest --runInBand && docker compose down --remove-orphans"
+    "hbase": "docker compose up -d --build hbase",
+    "test": "docker compose up -d cassandra hbase && until docker compose exec cassandra cqlsh -e 'DESCRIBE keyspaces' >/dev/null 2>&1; do echo '⌛ esperando Cassandra…'; sleep 5; done && until docker compose exec hbase bash -c \"echo 'status' | hbase shell -n\" | grep -q 'active master'; do echo '⌛ esperando HBase…'; sleep 5; done && NODE_ENV=test jest --runInBand && docker compose down --remove-orphans"
   },
   "keywords": [],
   "author": "",
