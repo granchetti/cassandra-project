@@ -13,6 +13,19 @@ services:
       timeout: 10s
       retries: 5
 
+  hbase:
+    image: harisekhon/hbase:latest           
+    container_name: hbase_db
+    ports:
+      - "16010:16010"   
+      - "2181:2181"     
+      - "9090:9090"     
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo 'status' | hbase shell -n >/dev/null"]
+      interval: 30s
+      timeout: 10s
   app:
     build: .
     container_name: node_app
@@ -24,7 +37,6 @@ services:
       - "3000:3000"
     command: ["node", "dist/server.js"]
 
-
   seed:
     build: .
     container_name: seed_dataset
@@ -35,7 +47,6 @@ services:
       - app-network
     command: ["npm", "run", "seed"]
     restart: "no"
-  
 
 networks:
   app-network:
